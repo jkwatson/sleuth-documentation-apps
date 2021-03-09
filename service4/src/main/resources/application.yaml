@@ -4,16 +4,28 @@ spring:
     name: service4
   sleuth:
     propagation:
-      type:
-        - b3
-        - w3c
+      type: W3C
     baggage:
       remote-fields:
-        - baggage
         - key
       correlation-fields:
         - key
+        - newField
+      local-fields:
+        - key
+        - newField
+      tag-fields:
+        - key
+        - newField
     otel:
+      log:
+        exporter:
+          enabled: true
+        slf4j:
+          enabled: true
+      propagation:
+        composite-text-map-propagator:
+          enabled: true
       config:
         trace-id-ratio-based: 1.0
 
@@ -22,7 +34,7 @@ logging.level.org.springframework.cloud.sleuth: DEBUG
 management.endpoints.web.base-path: /
 management.endpoints.web.exposure.include: "*"
 
-logging.pattern.level: "%5p [${spring.zipkin.service.name:${spring.application.name:}},%X{traceId:-},%X{spanId:-},%X{key:-}]"
+logging.pattern.level: "%5p [${spring.zipkin.service.name:${spring.application.name:}},%X{traceId:-},%X{spanId:-},%X{key:-},%X{newField:-}]"
 
 wavefront.application.name: sleuth-documentation-apps
 wavefront.application.service: service4
